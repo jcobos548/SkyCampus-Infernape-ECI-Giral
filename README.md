@@ -575,3 +575,9 @@ La retrospectiva se plantea como un ejercicio simulado para evaluar el proceso d
 | Documentar las dependencias entre módulos. | Líder técnico | 2 de noviembre de 2026 |
 | Agregar pruebas automatizadas para restricciones, permisos y conectividad. | Responsable de pruebas | 4 de noviembre de 2026 |
 | Registrar los impedimentos en Jira y asignar acciones de seguimiento. | Facilitador del equipo | 3 de noviembre de 2026 |
+
+## Reto 10: Diagrama de casos de uso de SkyCampus Enterprise
+
+El siguiente diagrama representa las funcionalidades principales de SkyCampus Enterprise, organizadas en cinco paquetes: Gestión de Misiones, Gestión de Flota, Rutas y Navegación, Mantenimiento y Administración. También muestra los actores del sistema y la relación entre sus permisos.
+
+![Diagrama de casos de uso de SkyCampus Enterprise](docs/diagramas/CU.png)
