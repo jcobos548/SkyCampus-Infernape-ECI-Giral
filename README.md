@@ -96,4 +96,11 @@ classDiagram
 
 ![Diagramas del Reto 3](docs/diagramas/UMLPatrones.png)
 
+# Reto 4 — Asignador de Misiones Enterprise
+
+## Evidencia
+
+![Evidencia del Reto 4](docs/evidencias/Reto4.png)
+
+
 

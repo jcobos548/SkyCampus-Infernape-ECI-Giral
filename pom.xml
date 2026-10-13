@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.skycampus</groupId>
-    <artifactId>skycampus-infernape</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
-    <name>SkyCampus Infernape</name>
-    <description>Dashboard de eficiencia de la red multi-sede SkyCampus</description>
+    <artifactId>SkyCampus-Infernape-ECI-Giral</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.release>26</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <junit.version>5.12.2</junit.version>
+        <mockito.version>5.18.0</mockito.version>
+        <byte-buddy.version>1.17.7</byte-buddy.version>
     </properties>
 
     <dependencies>
-        <!-- Pruebas unitarias con JUnit 5 -->
+
+        <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -26,17 +29,34 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Soporte para pruebas paramétricas -->
+        <!-- Mockito con integración para JUnit 5 -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Byte Buddy: generación de mocks compatible con Java reciente -->
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${byte-buddy.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>${byte-buddy.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
             <!-- Compilación con Java 26 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,12 +67,13 @@
                 </configuration>
             </plugin>
 
-            <!-- Ejecución de pruebas JUnit 5 -->
+            <!-- Ejecución de pruebas con JUnit 5 y Mockito -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
             </plugin>
+
         </plugins>
     </build>
 
