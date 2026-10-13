@@ -508,3 +508,70 @@ El resultado del requisito SC-15 es un plan de ruta multi-etapa que incluye las 
 ![mockups del Reto 8](docs/mockups/MU8.png)
 
 ![mockups del Reto 8](docs/mockups/MU9.png)
+
+# Reto 9: Roadmap trimestral y ceremonias ágiles
+
+## 1. Objetivo
+
+Planificar el desarrollo de SkyCampus Enterprise durante tres sprints de dos semanas, organizando las historias de usuario, estimando los Story Points y definiendo los objetivos de cada sprint. Adicionalmente, se realiza una retrospectiva simulada del Sprint 1 para identificar fortalezas, oportunidades de mejora y compromisos concretos.
+
+## 2. Roadmap en Jira
+
+Se crearon tres sprints en Jira para organizar el desarrollo incremental de SkyCampus Enterprise.
+
+| Sprint | Objetivo | Story Points estimados |
+|---|---|---:|
+| Sprint 1 | Conectividad multi-sede básica | 23 SP |
+| Sprint 2 | Rutas multi-etapa y estaciones de carga | 26 SP |
+| Sprint 3 | Analytics y panel superadmin | 24 SP |
+| **Total** | **Roadmap de Enterprise** | **73 SP** |
+
+Los Story Points corresponden a estimaciones iniciales de esfuerzo y complejidad. La velocity real se registrará al finalizar cada sprint.
+
+## 3. Evidencias de Jira
+
+### 3.1. Creación de los tres sprints
+
+La siguiente evidencia muestra la organización del backlog en los tres sprints definidos para el trimestre.
+
+![Evidencia de los tres sprints creados en Jira](docs/evidencias/Reto9.png)
+
+### 3.2. Sprint 1: Conectividad multi-sede básica
+
+Este sprint contempla las historias relacionadas con la gestión de usuarios y permisos, la configuración del radio de vuelo por sede, la validación de restricciones aéreas y la consulta de misiones entre ECI y UNAL.
+
+### 3.3. Sprint 2: Rutas multi-etapa y estaciones de carga
+
+Este sprint contempla la planificación de rutas entre sedes, la identificación de estaciones de carga, la asignación de drones según su capacidad y batería, y la consulta de condiciones meteorológicas.
+
+### 3.4. Sprint 3: Analytics y panel superadmin
+
+Este sprint contempla el panel global de administración, los indicadores de las misiones, las alertas automáticas, la visualización de la flota y la gestión de información de mantenimiento.
+
+### 3.5. Estimación de historias de usuario
+
+En Jira se registrarán los Story Points de cada historia de usuario para facilitar la planificación y el seguimiento del trabajo comprometido en cada sprint.
+
+## 4. Retrospectiva simulada del Sprint 1
+
+La retrospectiva se plantea como un ejercicio simulado para evaluar el proceso de trabajo y definir acciones de mejora.
+
+### ¿Qué salió bien?
+
+- Se organizaron las historias de usuario y se distribuyeron responsabilidades por módulo.
+- Se definió que las restricciones aéreas prevalecen sobre la configuración del radio máximo de vuelo por sede.
+- Se planteó validar progresivamente la conectividad entre ECI y UNAL.
+
+### ¿Qué debemos mejorar?
+
+- Documentar mejor las dependencias entre módulos.
+- Ampliar las pruebas automatizadas de permisos, restricciones aéreas y conectividad.
+- Registrar y hacer seguimiento oportuno a los impedimentos.
+
+### Compromisos de mejora
+
+| Compromiso | Responsable | Fecha límite |
+|---|---|---|
+| Documentar las dependencias entre módulos. | Líder técnico | 2 de noviembre de 2026 |
+| Agregar pruebas automatizadas para restricciones, permisos y conectividad. | Responsable de pruebas | 4 de noviembre de 2026 |
+| Registrar los impedimentos en Jira y asignar acciones de seguimiento. | Facilitador del equipo | 3 de noviembre de 2026 |
