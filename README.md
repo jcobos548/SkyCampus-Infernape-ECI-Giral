@@ -488,3 +488,23 @@ Cada atributo de los subobjetos debe especificarse con un tipo de dato real.
 ## 9. Resultado esperado
 
 El resultado del requisito SC-15 es un plan de ruta multi-etapa que incluye las etapas ordenadas, las estaciones de carga asignadas, el drone correspondiente a cada etapa, la autonomía estimada y el tiempo total de recorrido. La misión solo puede confirmarse e iniciarse cuando todas las restricciones de seguridad, capacidad, batería y permanencia en estaciones se cumplen.
+
+# Reto 8 — Design Tokens de SkyCampus Enterprise
+
+![mockups del Reto 8](docs/mockups/MU1.png)
+
+![mockups del Reto 8](docs/mockups/MU2.png)
+
+![mockups del Reto 8](docs/mockups/MU3.png)
+
+![mockups del Reto 8](docs/mockups/MU4.png)
+
+![mockups del Reto 8](docs/mockups/MU5.png)
+
+![mockups del Reto 8](docs/mockups/MU6.png)
+
+![mockups del Reto 8](docs/mockups/MU7.png)
+
+![mockups del Reto 8](docs/mockups/MU8.png)
+
+![mockups del Reto 8](docs/mockups/MU9.png)
