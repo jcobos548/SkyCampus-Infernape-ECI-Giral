@@ -318,3 +318,173 @@ La matriz se considera completa cuando:
 Las referencias PR-01 a PR-12 son identificadores documentales propuestos. Deben asociarse con las pruebas reales del proyecto y no deben presentarse como pruebas ejecutadas si aún no se han realizado.
 
 ![Evidencia del Reto 6](docs/evidencias/Reto6.png)
+
+# Reto 7 — Plantilla DOSW para el RF «SC-15 Planificar ruta multi-etapa inter-sede»
+
+## 1. Identificación del requisito
+
+**Código:** SC-15
+
+**Nombre:** Planificar ruta multi-etapa inter-sede.
+
+**Actor principal:** Operador de drones.
+
+**Actores secundarios:** Coordinador de sede, servicio de validación de Aerocivil, sistema de estaciones de carga.
+
+**Descripción:** El sistema debe planificar una misión de transporte entre dos sedes, considerando las características del paquete, las condiciones actuales del espacio aéreo, las restricciones de Aerocivil, las estaciones de carga disponibles y la autonomía de los drones. La ruta debe dividirse en etapas que permitan transportar el paquete de forma segura hasta su destino.
+
+## 2. Precondiciones
+
+1. El operador debe estar autenticado y autorizado para planificar misiones.
+2. Deben existir una sede de origen y una sede de destino válidas.
+3. Debe existir información de la misión y del paquete que se transportará.
+4. Debe estar disponible la información necesaria para verificar las restricciones del espacio aéreo.
+5. Debe existir información actualizada sobre los drones y las estaciones de carga disponibles para evaluar la planificación.
+
+## 3. Datos de entrada
+
+Cada atributo de los subobjetos debe especificarse con un tipo de dato real.
+
+| Nombre | Tipo de campo | Reglas | Obligatorio |
+|---|---|---|---|
+| misión | — | Contiene los datos necesarios para planificar el recorrido | Sí |
+| misión.id | String | Identificador único de la misión | Sí |
+| misión.paquete | — | Información del paquete transportado | Sí |
+| misión.paquete.id | String | Identificador único del paquete | Sí |
+| misión.paquete.pesoGramos | Integer | Debe ser mayor que cero | Sí |
+| misión.paquete.tipo | Enum(SOBRE,CARPETA,LIBRO,EQUIPO) | Tipo de paquete permitido | Sí |
+| misión.paquete.prioridad | Enum(URGENTE,NORMAL,BAJA) | Prioridad de transporte | Sí |
+| misión.sedeOrigen | — | Sede desde la que inicia la misión | Sí |
+| misión.sedeOrigen.id | String | Identificador de la sede | Sí |
+| misión.sedeOrigen.nombre | String | Nombre de la sede | Sí |
+| misión.sedeOrigen.latitud | Decimal | Coordenada geográfica | Sí |
+| misión.sedeOrigen.longitud | Decimal | Coordenada geográfica | Sí |
+| misión.sedeDestino | — | Sede a la que debe llegar el paquete | Sí |
+| misión.sedeDestino.id | String | Identificador de la sede | Sí |
+| misión.sedeDestino.nombre | String | Nombre de la sede | Sí |
+| misión.sedeDestino.latitud | Decimal | Coordenada geográfica | Sí |
+| misión.sedeDestino.longitud | Decimal | Coordenada geográfica | Sí |
+| misión.restriccionesEspeciales | — | Condiciones adicionales de la misión | Sí |
+| misión.restriccionesEspeciales.alturaMaximaMetros | Decimal | No puede superar los límites aplicables | No |
+| misión.restriccionesEspeciales.zonasProhibidas | List<ZonaRestringida(id:String, latitud:Decimal, longitud:Decimal, radioMetros:Decimal)> | Zonas que deben evitarse | No |
+| misión.restriccionesEspeciales.horaLimiteEntrega | LocalDateTime | Fecha y hora límite de entrega, si aplica | No |
+| condicionesAereas | — | Estado actual del espacio aéreo | Sí |
+| condicionesAereas.consultadoEn | LocalDateTime | Momento de la consulta | Sí |
+| condicionesAereas.estado | Enum(VALIDO,RESTRINGIDO,NO_DISPONIBLE) | Resultado de la consulta | Sí |
+| condicionesAereas.restricciones | List<RestriccionAerea(id:String, tipo:String, descripcion:String)> | Restricciones informadas por la fuente autorizada | Sí |
+
+## 4. Datos de salida
+
+| Nombre | Tipo de campo | Reglas | Obligatorio |
+|---|---|---|---|
+| planRuta | — | Resultado de la planificación | Sí |
+| planRuta.id | String | Identificador del plan | Sí |
+| planRuta.estado | Enum(PLANIFICADA,RECHAZADA,PENDIENTE_VALIDACION) | Estado de la planificación | Sí |
+| planRuta.etapas | List<EtapaRuta(numero:Integer, origen:String, destino:String, distanciaKm:Decimal, requiereRecarga:Boolean)> | Etapas ordenadas del recorrido | Sí, si la ruta es válida |
+| planRuta.estacionesCarga | List<EstacionAsignada(id:String, nombre:String, etapa:Integer, tiempoEstimadoMinutos:Integer)> | Estaciones asignadas a las etapas que necesitan recarga | Sí, si se requieren recargas |
+| planRuta.asignaciones | List<AsignacionDrone(etapa:Integer, droneId:String, bateriaInicialPorcentaje:Integer, bateriaEstimadaFinalPorcentaje:Integer)> | Drone asignado a cada etapa | Sí, si la ruta es válida |
+| planRuta.distanciaTotalKm | Decimal | Distancia total planificada | Sí, si la ruta es válida |
+| planRuta.tiempoEstimadoMinutos | Integer | Tiempo estimado de recorrido y recargas | Sí, si la ruta es válida |
+| planRuta.motivoRechazo | String | Explicación del rechazo, cuando corresponda | No |
+| planRuta.confirmada | Boolean | Indica si el operador confirmó el plan | Sí |
+| planRuta.vueloIniciado | Boolean | Indica si se inició el vuelo | Sí |
+
+## 5. Flujo básico
+
+1. El operador solicita planificar una misión y proporciona los datos del paquete, la sede de origen, la sede de destino y las restricciones especiales.
+2. El sistema valida los datos de entrada y consulta las condiciones actuales del espacio aéreo y las restricciones aplicables de Aerocivil.
+3. Si la validación es satisfactoria, el sistema calcula una ruta segura y la divide en etapas, garantizando que ningún tramo con carga supere los 5 km sin recarga.
+4. El sistema identifica las estaciones de carga disponibles, las asigna cuando sean necesarias y verifica que el paquete no permanezca más de 30 minutos en ninguna estación.
+5. El sistema asigna un drone apto a cada etapa, verifica la batería estimada y la capacidad de transporte, y presenta la ruta completa al operador.
+6. El operador revisa y confirma el plan de ruta.
+7. El sistema registra la confirmación y permite iniciar el vuelo cuando las validaciones y condiciones operativas sigan siendo satisfactorias.
+
+## 6. Flujos alternativos
+
+### FA-01. Aerocivil rechaza la ruta
+
+1. Durante la validación, se identifica que la ruta incumple una restricción aérea aplicable.
+2. El sistema rechaza la ruta propuesta y explica el motivo.
+3. Si existe una alternativa segura y válida, el sistema puede recalcular la ruta.
+4. Si no existe una alternativa válida, la planificación queda rechazada y no se permite iniciar el vuelo.
+
+**Resultado:** no se autoriza una ruta que incumpla las restricciones aéreas.
+
+### FA-02. No hay estaciones de carga disponibles
+
+1. El sistema determina que se necesita una recarga durante el recorrido.
+2. No encuentra una estación de carga disponible en una ubicación que permita continuar de forma segura.
+3. El sistema intenta identificar una alternativa válida.
+4. Si no existe una alternativa, rechaza la planificación e informa que no hay estaciones de carga adecuadas.
+
+**Resultado:** no se confirma una ruta que dependa de una recarga no disponible.
+
+### FA-03. El paquete es demasiado pesado para una ruta larga
+
+1. El sistema evalúa el peso del paquete y la capacidad de los drones disponibles para cada etapa.
+2. Detecta que el peso supera la capacidad permitida de los drones que podrían realizar un tramo.
+3. El sistema busca una alternativa compatible, como otro drone apto o una ruta con etapas diferentes, si resulta viable.
+4. Si no existe una solución válida, rechaza la planificación e informa que el paquete no puede transportarse con los recursos disponibles.
+
+**Resultado:** no se asigna un drone cuya capacidad sea insuficiente.
+
+### FA-04. Batería insuficiente
+
+1. El sistema calcula la autonomía disponible para cada etapa considerando la carga transportada.
+2. Detecta que un drone no tiene batería suficiente para completar su tramo de manera segura.
+3. El sistema intenta asignar otro drone apto o incorporar una estación de carga válida.
+4. Si no existe una alternativa, rechaza la planificación.
+
+**Resultado:** ningún drone recibe una asignación que exceda su autonomía operativa.
+
+### FA-05. El paquete supera el tiempo máximo en una estación
+
+1. El sistema calcula el tiempo estimado de llegada, espera y recarga en cada estación.
+2. Detecta que el paquete podría permanecer más de 30 minutos en una estación.
+3. El sistema intenta modificar la asignación o la planificación para respetar el límite.
+4. Si no es posible, rechaza la planificación.
+
+**Resultado:** la ruta confirmada no puede contemplar una permanencia superior a 30 minutos en una estación.
+
+### FA-06. La información del espacio aéreo no está disponible
+
+1. El sistema intenta consultar las restricciones aéreas.
+2. No puede obtener información suficiente y confiable.
+3. El sistema deja la planificación en estado pendiente de validación o la rechaza.
+4. No permite iniciar el vuelo mientras falte una validación crítica.
+
+**Resultado:** la ausencia de información no se interpreta como autorización para volar.
+
+## 7. Reglas de negocio
+
+**RN-01. Distancia máxima por etapa:** un drone no puede recorrer más de 5 km con carga sin realizar una recarga. La planificación debe dividir el trayecto en etapas que respeten este límite.
+
+**RN-02. Tiempo máximo en estación:** el paquete no puede permanecer más de 30 minutos en una estación de carga. El sistema debe considerar el tiempo estimado de espera y las operaciones de recarga.
+
+**RN-03. Restricciones aéreas:** toda ruta debe cumplir las restricciones aplicables de Aerocivil y las condiciones vigentes del espacio aéreo. Una ruta rechazada no puede confirmarse ni iniciarse.
+
+**RN-04. Capacidad del drone:** el peso del paquete no puede superar la capacidad máxima del drone asignado a ninguna etapa.
+
+**RN-05. Autonomía:** cada drone debe disponer de batería suficiente para completar su etapa de acuerdo con la autonomía operativa definida para el sistema.
+
+**RN-06. Disponibilidad de estaciones:** una estación solo puede asignarse si está disponible y puede atender la recarga dentro del tiempo máximo permitido.
+
+**RN-07. Asignación por etapa:** cada etapa debe tener un drone compatible, disponible y con batería suficiente. Un drone asignado a una etapa no se considera automáticamente disponible para otra etapa simultánea.
+
+**RN-08. Confirmación de ruta:** el vuelo solo puede iniciarse después de que el plan esté validado y confirmado. Si cambian las condiciones críticas, se debe realizar una nueva validación antes de continuar.
+
+## 8. Criterios de aceptación
+
+1. Dada una misión válida, el sistema calcula una ruta dividida en etapas y presenta su distancia total.
+2. Ningún tramo con carga supera los 5 km sin recarga.
+3. Cada estación asignada está disponible y respeta el límite de 30 minutos de permanencia del paquete.
+4. Cada etapa tiene asignado un drone con capacidad y autonomía suficientes.
+5. Una ruta que incumple las restricciones aéreas se rechaza.
+6. Si no hay estaciones de carga adecuadas, el sistema no confirma una ruta inviable.
+7. Si el paquete supera la capacidad de los drones disponibles, la misión se rechaza o se propone una alternativa válida.
+8. El sistema no inicia el vuelo antes de validar y confirmar la ruta.
+9. Cuando una validación crítica no puede realizarse, el sistema no autoriza automáticamente la misión.
+
+## 9. Resultado esperado
+
+El resultado del requisito SC-15 es un plan de ruta multi-etapa que incluye las etapas ordenadas, las estaciones de carga asignadas, el drone correspondiente a cada etapa, la autonomía estimada y el tiempo total de recorrido. La misión solo puede confirmarse e iniciarse cuando todas las restricciones de seguridad, capacidad, batería y permanencia en estaciones se cumplen.
